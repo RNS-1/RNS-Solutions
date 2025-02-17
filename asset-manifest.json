@@ -1,16 +1,17 @@
 {
   "files": {
-    "main.css": "/RNS-Solutions/static/css/main.932f3271.css",
-    "main.js": "/RNS-Solutions/static/js/main.9473254a.js",
+    "main.css": "/RNS-Solutions/static/css/main.a1d35e91.css",
+    "main.js": "/RNS-Solutions/static/js/main.0fbac1f8.js",
     "static/js/453.95f93ded.chunk.js": "/RNS-Solutions/static/js/453.95f93ded.chunk.js",
+    "static/media/Solu_logo.png": "/RNS-Solutions/static/media/Solu_logo.f8d03de9e3ec208e09c8.png",
     "index.html": "/RNS-Solutions/index.html",
     "static/media/grid.svg": "/RNS-Solutions/static/media/grid.5111e48e8be51dc5b6aa.svg",
-    "main.932f3271.css.map": "/RNS-Solutions/static/css/main.932f3271.css.map",
-    "main.9473254a.js.map": "/RNS-Solutions/static/js/main.9473254a.js.map",
+    "main.a1d35e91.css.map": "/RNS-Solutions/static/css/main.a1d35e91.css.map",
+    "main.0fbac1f8.js.map": "/RNS-Solutions/static/js/main.0fbac1f8.js.map",
     "453.95f93ded.chunk.js.map": "/RNS-Solutions/static/js/453.95f93ded.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.932f3271.css",
-    "static/js/main.9473254a.js"
+    "static/css/main.a1d35e91.css",
+    "static/js/main.0fbac1f8.js"
   ]
 }
