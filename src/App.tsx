@@ -12,34 +12,18 @@ import { AdminProvider } from './contexts/AdminContext';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { useAdmin } from './contexts/AdminContext';
 
-const PageChangeLoader: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const location = useLocation();
-
-  useEffect(() => {
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [location.pathname]);
-
-  return <LoadingScreen isLoading={isLoading} />;
-};
-
 const AppContent: React.FC = () => {
   const { isAdmin } = useAdmin();
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <PageChangeLoader />
       <Header />
       {isAdmin ? (
         <AdminPanel />
       ) : (
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/RNS-Solutions" element={<Home />} />
           <Route path="/solutions" element={<Solutions />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
@@ -65,8 +49,11 @@ const App: React.FC = () => {
     <Router>
       <AdminProvider>
         <ProjectsProvider>
-          <LoadingScreen isLoading={initialLoading} />
-          <AppContent />
+          {initialLoading ? (
+            <LoadingScreen isLoading={initialLoading} />
+          ) : (
+            <AppContent />
+          )}
         </ProjectsProvider>
       </AdminProvider>
     </Router>
