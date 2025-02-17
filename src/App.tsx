@@ -11,6 +11,7 @@ import LoadingScreen from './components/LoadingScreen';
 import { AdminProvider } from './contexts/AdminContext';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { useAdmin } from './contexts/AdminContext';
+import Portfolio from './components/Portfolio';
 
 const AppContent: React.FC = () => {
   const { isAdmin } = useAdmin();
@@ -27,6 +28,7 @@ const AppContent: React.FC = () => {
           <Route path="/solutions" element={<Solutions />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/portfolio" element={<Portfolio />} />
         </Routes>
       )}
       <Chatbot />
@@ -36,28 +38,45 @@ const AppContent: React.FC = () => {
 
 const App: React.FC = () => {
   const [initialLoading, setInitialLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setInitialLoading(false);
-    }, 1000);
+    }, 3000); // Initial loading screen for 3 seconds
 
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    setLoading(true); // Show loading screen on route change
+    const timer = setTimeout(() => {
+      setLoading(false); // Hide loading screen after a short delay
+    }, 3000); // Set loading duration to 3 seconds
+
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
   return (
-    <Router>
-      <AdminProvider>
-        <ProjectsProvider>
-          {initialLoading ? (
-            <LoadingScreen isLoading={initialLoading} />
-          ) : (
-            <AppContent />
-          )}
-        </ProjectsProvider>
-      </AdminProvider>
-    </Router>
+    <>
+      {initialLoading || loading ? (
+        <LoadingScreen isLoading={initialLoading || loading} />
+      ) : (
+        <AppContent />
+      )}
+    </>
   );
 };
 
-export default App;
+const AppWrapper: React.FC = () => (
+  <Router>
+    <AdminProvider>
+      <ProjectsProvider>
+        <App />
+      </ProjectsProvider>
+    </AdminProvider>
+  </Router>
+);
+
+export default AppWrapper;

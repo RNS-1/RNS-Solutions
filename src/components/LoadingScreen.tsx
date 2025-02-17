@@ -13,14 +13,14 @@ const LoadingScreen: React.FC<LoadingScreenProps> = ({ isLoading }) => {
                 <motion.div
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    transition={{ duration: 0.5 }}
+                    transition={{ duration: 10 }}
                     className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center"
                 >
                     <Logo />
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.5 }}
+                        transition={{ delay: 10 }}
                         className="mt-4 text-primary font-medium"
                     >
                         Solutions

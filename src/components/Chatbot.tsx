@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { FaRobot, FaTimes, FaComment, FaSmile } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import { companyInfo } from '../data/chatbotContent';
-import { chatEmojis, getRandomEmoji } from '../utils/chatEmojis';
+import { chatEmojis } from '../utils/chatEmojis';
 
 // Note: In a real application, you'd want to secure this
 const GEMINI_API_KEY = 'AIzaSyCJswbUfxT2YqZuJaqTPlUS4BcAe9F-Vy0';
@@ -21,59 +21,49 @@ const Chatbot: React.FC = () => {
     const [input, setInput] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const formatResponse = (text: string) => {
-        // Add emojis to key phrases
-        const enhancedText = text
-            .replace(/web development/gi, `web development ${chatEmojis.web}`)
-            .replace(/mobile/gi, `mobile ${chatEmojis.mobile}`)
-            .replace(/AI|artificial intelligence/gi, `AI ${chatEmojis.ai}`)
-            .replace(/cloud/gi, `cloud ${chatEmojis.cloud}`)
-            .replace(/security/gi, `security ${chatEmojis.security}`)
-            .replace(/team/gi, `team ${chatEmojis.team}`)
-            .replace(/innovation/gi, `innovation ${chatEmojis.innovation}`)
-            .replace(/success/gi, `success ${chatEmojis.success}`)
-            .replace(/contact/gi, `contact ${chatEmojis.email}`)
-            .replace(/RNS Solutions/g, `RNS Solutions ${chatEmojis.star}`);
-
-        return enhancedText;
-    };
-
     const generateResponse = async (userInput: string) => {
-        try {
-            const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: `You are RNS Solution Spark, a direct and professional AI assistant. 
-                            Provide concise, informative responses without any conversational prefixes or phrases like "Sure," or "I can help."
-                            
-                            Company Context: ${JSON.stringify(companyInfo)}
-                            
-                            User Question: ${userInput}
-                            
-                            Response (be direct and professional):`
+        // Here you can implement your logic to determine if the input is RNS-related
+        const isRNSRelated = userInput.toLowerCase().includes('rns');
+
+        if (isRNSRelated) {
+            try {
+                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        contents: [{
+                            parts: [{
+                                text: `You are RNS Solution Spark, a direct and professional AI assistant. 
+                                Provide concise, informative responses without any conversational prefixes or phrases like "Sure," or "I can help."
+                                
+                                Company Context: ${JSON.stringify(companyInfo)}
+                                
+                                User Question: ${userInput}
+                                
+                                Response (be direct and professional):`
+                            }]
                         }]
-                    }]
-                })
-            });
+                    })
+                });
 
-            const data = await response.json();
-            let response_text = data.candidates[0].content.parts[0].text;
+                const data = await response.json();
+                let response_text = data.candidates[0].content.parts[0].text;
 
-            // Clean up common prefixes
-            response_text = response_text
-                .replace(/^(Sure|I can help|Here's|Let me help|Here is|Based on|According to).*(:|,|\.)?\s*/i, '')
-                .replace(/^(the\s)?answer\s(is|would be)\s*:?\s*/i, '')
-                .trim();
+                // Clean up common prefixes
+                response_text = response_text
+                    .replace(/^(Sure|I can help|Here's|Let me help|Here is|Based on|According to).*(:|,|\.)?\s*/i, '')
+                    .replace(/^(the\s)?answer\s(is|would be)\s*:?\s*/i, '')
+                    .trim();
 
-            return formatResponse(response_text);
-        } catch (error) {
-            console.error('Error:', error);
-            return `${chatEmojis.tools} I'm having trouble connecting right now. Please try again later.`;
+                return response_text;
+            } catch (error) {
+                console.error('Error:', error);
+                return `${chatEmojis.tools} I'm having trouble connecting right now. Please try again later.`;
+            }
+        } else {
+            return "I'm sorry, but I can only assist with RNS-related content. For other details, please use the RNS-GPT.";
         }
     };
 
@@ -103,12 +93,7 @@ const Chatbot: React.FC = () => {
                     >
                         <div className="bg-primary p-4 rounded-t-lg flex justify-between items-center">
                             <div className="flex items-center text-white">
-                                <motion.div
-                                    animate={{ rotate: [0, -10, 10, -10, 0] }}
-                                    transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
-                                >
-                                    <FaRobot className="mr-2 text-xl" />
-                                </motion.div>
+                                <FaRobot className="mr-2 text-xl" />
                                 <span>RNS Solution Spark</span>
                             </div>
                             <button
@@ -130,8 +115,8 @@ const Chatbot: React.FC = () => {
                                         className={`flex ${message.isBot ? 'justify-start' : 'justify-end'}`}
                                     >
                                         <div className={`rounded-lg p-3 max-w-[80%] ${message.isBot
-                                                ? 'bg-gray-100 hover:bg-gray-200'
-                                                : 'bg-primary text-white'
+                                            ? 'bg-gray-100 hover:bg-gray-200'
+                                            : 'bg-primary text-white'
                                             } transition-colors duration-200`}
                                         >
                                             {message.text}
@@ -146,12 +131,7 @@ const Chatbot: React.FC = () => {
                                     className="flex justify-start"
                                 >
                                     <div className="bg-gray-100 rounded-lg p-3">
-                                        <motion.div
-                                            animate={{ scale: [1, 1.2, 1] }}
-                                            transition={{ repeat: Infinity, duration: 1 }}
-                                        >
-                                            {getRandomEmoji()}
-                                        </motion.div>
+                                        {chatEmojis.idea} {/* You can replace this with a loading animation */}
                                     </div>
                                 </motion.div>
                             )}
@@ -166,15 +146,13 @@ const Chatbot: React.FC = () => {
                                     placeholder="Type your message..."
                                     className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                 />
-                                <motion.button
+                                <button
                                     type="submit"
                                     disabled={isLoading}
-                                    whileHover={{ scale: 1.05 }}
-                                    whileTap={{ scale: 0.95 }}
                                     className="bg-primary text-white p-2 rounded-lg hover:bg-primary-dark transition-colors disabled:opacity-50"
                                 >
                                     <FaSmile className="w-6 h-6" />
-                                </motion.button>
+                                </button>
                             </div>
                         </form>
                     </motion.div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { useAdmin } from '../contexts/AdminContext';
+import SoluLogo from '../asserts/Solu_logo.png'; // Adjust the path as necessary
 
 const Header: React.FC = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -18,6 +19,7 @@ const Header: React.FC = () => {
                             className="flex items-center space-x-3"
                             onClick={() => !isAdmin && incrementCount()}
                         >
+                            <img src={SoluLogo} alt="Solu Logo" className="h-12" /> {/* Logo Image */}
                             <span className="text-2xl font-bold text-primary">RNS Solutions</span>
                         </Link>
 
