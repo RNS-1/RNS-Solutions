@@ -12,6 +12,7 @@ import { AdminProvider } from './contexts/AdminContext';
 import { ProjectsProvider } from './contexts/ProjectsContext';
 import { useAdmin } from './contexts/AdminContext';
 import Portfolio from './components/Portfolio';
+import Workflow from './pages/Workflow';
 
 const AppContent: React.FC = () => {
   const { isAdmin } = useAdmin();
@@ -29,6 +30,7 @@ const AppContent: React.FC = () => {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/workflow" element={<Workflow />} />
         </Routes>
       )}
       <Chatbot />

@@ -13,6 +13,18 @@ interface Message {
     isBot: boolean;
 }
 
+const GREETINGS = [
+    'hi',
+    'hello',
+    'hey',
+    'greetings',
+    'what\'s up',
+    'howdy',
+    'good morning',
+    'good afternoon',
+    'good evening',
+];
+
 const Chatbot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
@@ -22,48 +34,42 @@ const Chatbot: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
 
     const generateResponse = async (userInput: string) => {
-        // Here you can implement your logic to determine if the input is RNS-related
-        const isRNSRelated = userInput.toLowerCase().includes('rns');
-
-        if (isRNSRelated) {
-            try {
-                const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        contents: [{
-                            parts: [{
-                                text: `You are RNS Solution Spark, a direct and professional AI assistant. 
-                                Provide concise, informative responses without any conversational prefixes or phrases like "Sure," or "I can help."
-                                
-                                Company Context: ${JSON.stringify(companyInfo)}
-                                
-                                User Question: ${userInput}
-                                
-                                Response (be direct and professional):`
-                            }]
+        try {
+            const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `You are RNS Solution Spark, a friendly and professional AI assistant. 
+                            You should accept greetings and respond to general inquiries without relying on specific keywords. 
+                            Provide concise, informative responses without any conversational prefixes or phrases like "Sure," or "I can help."
+                            
+                            Company Context: ${JSON.stringify(companyInfo)}
+                            
+                            User Question: ${userInput}
+                            
+                            Response (be direct and professional):`
                         }]
-                    })
-                });
+                    }]
+                })
+            });
 
-                const data = await response.json();
-                let response_text = data.candidates[0].content.parts[0].text;
+            const data = await response.json();
+            let response_text = data.candidates[0].content.parts[0].text;
 
-                // Clean up common prefixes
-                response_text = response_text
-                    .replace(/^(Sure|I can help|Here's|Let me help|Here is|Based on|According to).*(:|,|\.)?\s*/i, '')
-                    .replace(/^(the\s)?answer\s(is|would be)\s*:?\s*/i, '')
-                    .trim();
+            // Clean up common prefixes
+            response_text = response_text
+                .replace(/^(Sure|I can help|Here's|Let me help|Here is|Based on|According to).*(:|,|\.)?\s*/i, '')
+                .replace(/^(the\s)?answer\s(is|would be)\s*:?\s*/i, '')
+                .trim();
 
-                return response_text;
-            } catch (error) {
-                console.error('Error:', error);
-                return `${chatEmojis.tools} I'm having trouble connecting right now. Please try again later.`;
-            }
-        } else {
-            return "I'm sorry, but I can only assist with RNS-related content. For other details, please use the RNS-GPT.";
+            return response_text;
+        } catch (error) {
+            console.error('Error:', error);
+            return `${chatEmojis.tools} I'm having trouble connecting right now. Please try again later.`;
         }
     };
 

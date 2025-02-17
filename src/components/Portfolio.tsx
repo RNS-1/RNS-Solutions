@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { FaGlobe, FaMobile, FaDesktop, FaServer, FaLink, FaGithub } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import Projectcard from './ProjectCard';
+import { projects } from '../data/projects'; // Assuming you have a projects data file
 
 interface Project {
     id: number;
@@ -14,106 +16,44 @@ interface Project {
     industry: string;
 }
 
-const projects: Project[] = [
-    {
-        id: 1,
-        title: "E-Commerce Platform",
-        description: "A full-featured e-commerce solution with real-time inventory management",
-        image: "/path/to/ecommerce-image.jpg",
-        category: ["Web Development", "Full Stack"],
-        technologies: ["React", "Node.js", "MongoDB", "Redux"],
-        demoUrl: "https://demo.example.com",
-        githubUrl: "https://github.com/example",
-        industry: "Retail"
-    },
-    // Add more projects...
-];
-
 const Portfolio: React.FC = () => {
     const [filter, setFilter] = useState<string>("all");
-    const [industryFilter, setIndustryFilter] = useState<string>("all");
 
     const categories = ["all", "Web Development", "Mobile Apps", "UI/UX", "Full Stack"];
-    const industries = ["all", "Retail", "Healthcare", "Finance", "Technology"];
 
     const filteredProjects = projects.filter(project => {
-        const categoryMatch = filter === "all" || project.category.includes(filter);
-        const industryMatch = industryFilter === "all" || project.industry === industryFilter;
-        return categoryMatch && industryMatch;
+        return filter === "all" || project.category.includes(filter);
     });
-
-    const containerVariants = {
-        hidden: { opacity: 0 },
-        visible: {
-            opacity: 1,
-            transition: {
-                staggerChildren: 0.1
-            }
-        }
-    };
-
-    const itemVariants = {
-        hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0 }
-    };
 
     return (
         <div className="py-12">
-            <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="mb-8 flex flex-wrap gap-4 justify-center"
-            >
-                <div className="space-y-2">
-                    <h3 className="text-sm font-semibold text-gray-600">Category</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {categories.map(category => (
-                            <button
-                                key={category}
-                                onClick={() => setFilter(category)}
-                                className={`px-4 py-2 rounded-full text-sm transition-all ${filter === category
-                                        ? 'bg-primary text-white'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                    }`}
-                            >
-                                {category.charAt(0).toUpperCase() + category.slice(1)}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-                <div className="space-y-2">
-                    <h3 className="text-sm font-semibold text-gray-600">Industry</h3>
-                    <div className="flex flex-wrap gap-2">
-                        {industries.map(industry => (
-                            <button
-                                key={industry}
-                                onClick={() => setIndustryFilter(industry)}
-                                className={`px-4 py-2 rounded-full text-sm transition-all ${industryFilter === industry
-                                        ? 'bg-primary text-white'
-                                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                                    }`}
-                            >
-                                {industry.charAt(0).toUpperCase() + industry.slice(1)}
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </motion.div>
+            <h2 className="text-3xl font-bold text-center mb-8">Our Portfolio</h2>
+            <div className="flex justify-center mb-6">
+                {categories.map(category => (
+                    <button
+                        key={category}
+                        onClick={() => setFilter(category)}
+                        className={`px-4 py-2 rounded-full text-sm transition-all ${filter === category
+                            ? 'bg-primary text-white'
+                            : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                        }`}
+                    >
+                        {category.charAt(0).toUpperCase() + category.slice(1)}
+                    </button>
+                ))}
+            </div>
 
             <motion.div
-                variants={containerVariants}
                 initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+                animate="visible"
+                variants={{
+                    hidden: { opacity: 0 },
+                    visible: { opacity: 1, transition: { staggerChildren: 0.2 } }
+                }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
             >
                 {filteredProjects.map(project => (
-                    <motion.div
-                        key={project.id}
-                        variants={itemVariants}
-                        whileHover={{ y: -5 }}
-                    >
+                    <motion.div key={project.id} variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}>
                         <ProjectCard project={project} />
                     </motion.div>
                 ))}
